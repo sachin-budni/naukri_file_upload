@@ -6,6 +6,14 @@ pipeline {
     cron('0 * * * *')
   }
 
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Install Dependencies') {
       steps {
         script {
           if (isUnix()) {
@@ -17,13 +25,13 @@ pipeline {
           }
         }
       }
-      }
     }
 
-    stage('Install Dependencies') {
+    stage('Run Naukri Update') {
       steps {
-        sh 'npm ci'
-        withCredentials([usernamePassword(credentialsId: 'naukri-creds', usernameVariable: 'sachinswapna143@gmail.com', passwordVariable: 'Sapna@143')]) {
+        // Provide credentials via Jenkins "Username with password" credential
+        // Create a credential in Jenkins with id 'naukri-creds'
+        withCredentials([usernamePassword(credentialsId: 'naukri-creds', usernameVariable: 'NAUKRI_EMAIL', passwordVariable: 'NAUKRI_PASSWORD')]) {
           script {
             if (isUnix()) {
               sh 'node naukri-update.js'
@@ -31,14 +39,6 @@ pipeline {
               bat 'node naukri-update.js'
             }
           }
-        }
-
-    stage('Run Naukri Update') {
-      steps {
-        // Provide credentials via Jenkins "Username with password" credential
-        // Create a credential in Jenkins with id 'naukri-creds'
-        withCredentials([usernamePassword(credentialsId: 'naukri-creds', usernameVariable: 'sachinswapna143@gmail.com', passwordVariable: 'Sapna@143')]) {
-          sh 'node naukri-update.js'
         }
       }
     }
