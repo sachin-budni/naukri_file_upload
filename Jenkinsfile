@@ -31,7 +31,7 @@ pipeline {
       steps {
         // Provide credentials via Jenkins "Username with password" credential
         // Create a credential in Jenkins with id 'naukri-creds'
-        withCredentials([usernamePassword(credentialsId: 'naukri-creds', usernameVariable: 'sachinswapna143@gmail.com', passwordVariable: 'Sapna@143')]) {
+        withCredentials([usernamePassword(usernameVariable: 'sachinswapna143@gmail.com', passwordVariable: 'Sapna@143')]) {
           script {
             if (isUnix()) {
               sh 'node naukri-update.js'
@@ -53,3 +53,4 @@ pipeline {
     }
   }
 }
+
