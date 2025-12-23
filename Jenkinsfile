@@ -29,9 +29,13 @@ pipeline {
 
     stage('Run Naukri Update') {
       steps {
-        // Provide credentials via Jenkins "Username with password" credential
-        // Create a credential in Jenkins with id 'naukri-creds'
-        withCredentials([usernamePassword(credentialsId: 'naukri-creds')]) {
+        withCredentials([
+          usernamePassword(
+            credentialsId: 'naukri-creds',
+            usernameVariable: 'NAUKRI_USERNAME',
+            passwordVariable: 'NAUKRI_PASSWORD'
+          )
+        ]) {
           script {
             if (isUnix()) {
               sh 'node naukri-update.js'
@@ -42,6 +46,7 @@ pipeline {
         }
       }
     }
+
   }
 
   post {
@@ -53,3 +58,4 @@ pipeline {
     }
   }
 }
+
