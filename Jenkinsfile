@@ -29,11 +29,15 @@ pipeline {
 
     stage('Run Naukri Update') {
       steps {
-        script {
-          if (isUnix()) {
-            sh 'node naukri-update.js'
-          } else {
-            bat 'node naukri-update.js'
+        // Provide credentials via Jenkins "Username with password" credential
+        // Create a credential in Jenkins with id 'naukri-creds'
+        withCredentials([usernamePassword(credentialsId: 'naukri-creds')]) {
+          script {
+            if (isUnix()) {
+              sh 'node naukri-update.js'
+            } else {
+              bat 'node naukri-update.js'
+            }
           }
         }
       }
