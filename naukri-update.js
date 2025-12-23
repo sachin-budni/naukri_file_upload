@@ -7,7 +7,7 @@ async function retryWithBackoff(fn, maxRetries = 3, delay = 1000) {
       return await fn();
     } catch (error) {
       if (i === maxRetries - 1) throw error;
-      console.warn(`⚠️  Attempt ${i + 1} failed, retrying in ${delay}ms...`);
+      console.warn(`⚠️  Attempt ${i + 1} failed, retrying in ${delay}ms...   ${error}`);
       await new Promise(resolve => setTimeout(resolve, delay));
       delay *= 2; // Exponential backoff
     }
@@ -41,8 +41,8 @@ async function retryWithBackoff(fn, maxRetries = 3, delay = 1000) {
   });
 
   // 2️⃣ LOGIN (use environment variables when available)
-  const NAUKRI_EMAIL = 'sachinswapna143@gmail.com';
-  const NAUKRI_PASSWORD = 'Sapna@143';
+  const NAUKRI_EMAIL = process.env.NAUKRI_EMAIL || 'sachinswapna143@gmail.com';
+  const NAUKRI_PASSWORD = process.env.NAUKRI_PASSWORD || 'Sapna@143';
 
   await retryWithBackoff(async () => {
     await page.fill('#usernameField', NAUKRI_EMAIL);
@@ -92,4 +92,3 @@ async function retryWithBackoff(fn, maxRetries = 3, delay = 1000) {
   console.error('❌ Error:', error.message);
   process.exit(1);
 });
-
